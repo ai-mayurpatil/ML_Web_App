@@ -4,7 +4,12 @@ from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
+
 import numpy as np
+import matplotlib.pyplot as plt
 
 st.title("Mayur")
 
@@ -64,3 +69,29 @@ def get_classifier(clf_name, params):
     return clf
 
 clf = get_classifier(classifier_name, params)
+
+# Classification
+X_train,X_test, y_train, y_test= train_test_split(x, y,test_size=0.2, random_state=1234)
+
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+
+acc= accuracy_score(y_test, y_pred)
+st.write(f"classifier = {classifier_name}")
+st.write(f"accuracy = {acc}")
+
+# Plot
+pca = PCA(2)
+X_projected = pca.fit_transform(x)
+
+x1=X_projected[:, 0]
+x2=X_projected[:, 1]
+
+fig = plt.figure()
+plt.scatter(x1, x2, c=y, alpha=0.8, cmap="viridis")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.colorbar()
+
+#plt.show()
+st.pyplot(fig)
